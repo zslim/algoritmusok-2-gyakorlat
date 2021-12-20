@@ -45,28 +45,38 @@ class LinkedList:
                 current = current.next
         return None
 
-    def insert(self, value, index=0):  # TODO: clean this up
-        # Raises IndexError if index is out of range (greater than the number of elements before inserting)
+    def insert(self, value, index=0):
         if index < 0:
-            raise ValueError("Please provide a non-negative index")
-        current_index = 0
-        current_element = self.head
-        while current_index < index - 1:
+            raise IndexError("Please provide a non-negative index")
+        elif index == 0:
+            inserted_element = LinkedListElement(value, self.head)
+            self.head = inserted_element
+            return
+        else:
+            current_index = 0
+            current_element = self.head
+            while current_index < index - 1 and current_element:
+                current_element = current_element.next
+                current_index += 1
             if not current_element:
                 raise IndexError(f"Index out of range, maximum index to insert to: {current_index}")
-            current_element = current_element.next
-            current_index += 1
-        inserted_element = LinkedListElement(value, current_element.next)
-        current_element.next = inserted_element
+            else:
+                inserted_element = LinkedListElement(value, current_element.next)
+                current_element.next = inserted_element
 
     def insert_after_element(self, inserted_value, after_value):
-        # Inserting after first occurrence of `after_value`, or at the end of the list
+        # Inserting after first occurrence of `after_value`, raises ValueError if not found
         current_element = self.head
         while current_element and current_element.value != after_value:
             current_element = current_element.next
-        current_element.next = LinkedListElement(inserted_value, current_element.next)
+        if current_element:
+            current_element.next = LinkedListElement(inserted_value, current_element.next)
+        else:
+            raise ValueError(f"`after_value` {after_value} not found in LinkedList {str(self)}")
 
     def remove(self, index):
+        if self.head is None:
+            raise IndexError("LinkedList is empty; index out of range")
         if index == 0:
             self.head = self.head.next
         else:
@@ -84,8 +94,10 @@ class LinkedList:
             raise IndexError("LinkedList index out of range")
 
     def remove_element(self, value):
-        # Removing first occurrence of element or raising ValueError if not found
-        if self.head.value == value:
+        # Removing first occurrence of element; doing nothing if not found
+        if not self.head:
+            return
+        elif self.head.value == value:
             self.head = self.head.next
         else:
             previous_element = self.head
@@ -96,7 +108,6 @@ class LinkedList:
                     return
                 previous_element = current_element
                 current_element = current_element.next
-            raise ValueError("Could not remove element because it could not be found")
 
     def append(self, value):
         pass  # TODO
@@ -110,6 +121,8 @@ class LinkedList:
     @classmethod
     def factory(cls, *args):
         # To ease list creation in sample code
+        if len(args) == 0:
+            return cls()
         head = LinkedListElement(args[-1])
         for i in range(len(args) - 1, 0, -1):
             next = head
