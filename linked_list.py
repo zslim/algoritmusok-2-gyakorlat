@@ -133,8 +133,30 @@ class LinkedList:
             current_element.next = None
         return returned_value
 
-    def sort(self):
-        pass  # TODO hozzunk létre egy új listát
+    def reverse(self):
+        reversed_list = LinkedList()
+        while self.head:
+            reversed_list.append(self.pop())
+        self.head = reversed_list.head
+
+    def sort(self, reverse=False):
+        sorted_list = LinkedList()
+        while self.head:
+            min_value = self.head.value
+            if not self.head.next:
+                sorted_list.append(self.head.value)
+                self.head = None
+                continue
+            current_element = self.head.next
+            while current_element:
+                if current_element.value < min_value:
+                    min_value = current_element.value
+                current_element = current_element.next
+            sorted_list.append(min_value)
+            self.remove_element(min_value)
+        if reverse:
+            sorted_list.reverse()
+        self.head = sorted_list.head
 
     @classmethod
     def factory(cls, *args):
@@ -159,7 +181,37 @@ class LinkedList:
 
 
 if __name__ == '__main__':
-    lista = LinkedList.factory(1, 2, 3, 4, 5, 6)
-    print(f"iteratívan létrehozott lista: {lista}")
-    lista_rec = LinkedList.factory_recursive(1, 2, 3, 4, 5, 6)
-    print(f"rekurzívan létrehozott lista: {lista_rec}")
+    lista_it = LinkedList.factory(1, 2, 3, 4, 5, 6)
+    print(f"iteratívan létrehozott lista: {lista_it}")
+    lista = LinkedList.factory_recursive(5, 4, 3, 2, 1)
+    print(f"rekurzívan létrehozott lista: {lista}; ezt fogom használni")
+    # search
+    searched_value = 3
+    index = lista.search(searched_value)
+    print(f"keresett elem: {searched_value}; index: {index}")
+    #insert
+    inserted_value, index_to_insert = 9, 4
+    lista.insert(inserted_value, index_to_insert)
+    print(f"beillesztett érték: {inserted_value}, beillesztés helye: {index_to_insert}; eredmény: {lista}")
+    # insert_after_element
+    inserted_value, element_to_insert_after = 7, 4
+    lista.insert_after_element(inserted_value, element_to_insert_after)
+    print(f"beillesztett érték: {inserted_value}, melyik elem után: {element_to_insert_after}, eredmény: {lista}")
+    # remove
+    removed_index = 0
+    lista.remove(removed_index)
+    print(f"eltávolítás helye: {removed_index}, eredmény: {lista}")
+    # remove_element
+    removed_value = 2
+    lista.remove_element(removed_value)
+    print(f"eltávolított érték: {removed_value}, eredmény: {lista}")
+    # append
+    appended_value = 8
+    lista.append(appended_value)
+    print(f"hozzáfűzött érték: {appended_value}, eredmény: {lista}")
+    # pop
+    popped = lista.pop()
+    print(f"eldobott érték: {popped}, megváltozott lista: {lista}")
+    # sort
+    lista.sort()
+    print(f"rendezett lista: {lista}")

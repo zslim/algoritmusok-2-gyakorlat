@@ -119,3 +119,25 @@ def test_pop_attribute_error():
     my_list = LinkedList()
     with pytest.raises(AttributeError):
         my_list.pop()
+
+
+@pytest.mark.parametrize(["numbers", "expected_numbers"], [
+    ((1, 2, 3, 4), (4, 3, 2, 1)), ((1,), (1,)), ((), ())
+])
+def test_reverse(numbers, expected_numbers):
+    my_list = LinkedList.factory(*numbers)
+    my_list.reverse()
+    expected = LinkedList.factory(*expected_numbers)
+    assert my_list == expected
+
+
+@pytest.mark.parametrize(["numbers", "reverse", "expected_numbers"], [
+    ((1, 2, 3, 4), False, (1, 2, 3, 4)), ((1, 2, 3, 4), True, (4, 3, 2, 1)),
+    ((1, -5, 0, 2, 3), False, (-5, 0, 1, 2, 3)), ((), True, ()), ((1,), False, (1,)),
+    ((3, 5, 1, 8, 0), True, (8, 5, 3, 1, 0)), ((2, 4, 0, 6, -1), False, (-1, 0, 2, 4, 6))
+])
+def test_sort(numbers, reverse, expected_numbers):
+    my_list = LinkedList.factory(*numbers)
+    my_list.sort(reverse)
+    expected_list = LinkedList.factory(*expected_numbers)
+    assert my_list == expected_list
