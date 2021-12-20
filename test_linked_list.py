@@ -92,3 +92,30 @@ def test_remove_element(numbers, value, expected_numbers):
     my_list.remove_element(value)
     expected = LinkedList.factory(*expected_numbers)
     assert my_list == expected
+
+
+@pytest.mark.parametrize(["numbers", "appended_value", "expected_numbers"], [
+    ((1, 2, 3, 4), 9, (1, 2, 3, 4, 9)), ((1,), 9, (1, 9)), ((), 9, (9,))
+])
+def test_append(numbers, appended_value, expected_numbers):
+    my_list = LinkedList.factory(*numbers)
+    my_list.append(appended_value)
+    expected = LinkedList.factory(*expected_numbers)
+    assert my_list == expected
+
+
+@pytest.mark.parametrize(["numbers", "expected_returned_value", "expected_numbers"], [
+    ((1, 2, 3, 4), 4, (1, 2, 3)), ((1,), 1, ()), ((1, 2, 3, 4, 1), 1, (1, 2, 3, 4))
+])
+def test_pop(numbers, expected_returned_value, expected_numbers):
+    my_list = LinkedList.factory(*numbers)
+    actual_returned = my_list.pop()
+    expected = LinkedList.factory(*expected_numbers)
+    assert actual_returned == expected_returned_value
+    assert my_list == expected
+
+
+def test_pop_attribute_error():
+    my_list = LinkedList()
+    with pytest.raises(AttributeError):
+        my_list.pop()

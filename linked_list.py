@@ -110,10 +110,28 @@ class LinkedList:
                 current_element = current_element.next
 
     def append(self, value):
-        pass  # TODO
+        if not self.head:
+            self.head = LinkedListElement(value)
+        else:
+            current_element = self.head
+            while current_element.next:
+                current_element = current_element.next
+            current_element.next = LinkedListElement(value)
 
     def pop(self):
-        pass  # TODO
+        # Returns the last element and removes it from the list
+        if not self.head:
+            raise AttributeError("Cannot pop last element from empty list")
+        elif not self.head.next:
+            returned_value = self.head.value
+            self.head = None
+        else:
+            current_element = self.head
+            while current_element.next.next:
+                current_element = current_element.next
+            returned_value = current_element.next.value
+            current_element.next = None
+        return returned_value
 
     def sort(self):
         pass  # TODO hozzunk létre egy új listát
